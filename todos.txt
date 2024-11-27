@@ -1,9 +1,9 @@
-Cuddle a cat
-Do some Python
-See Sophie
-Marry a pencil
-Add a new thing to my thing.
-New boots and panties
+Think + '"'\n'"' + this but + "\n"
+Think this but \n
+
+This
+Think this but
+Think + '"'\n'"' + this but + "\n"
 Billy Bob Chicken Round
 Smedly Owner
-Crippet Wilds
+Think this 
