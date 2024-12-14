@@ -2,7 +2,7 @@ import functions
 import FreeSimpleGUI as Fsg
 
 label = Fsg.Text("Type in a to-do")
-input_box = Fsg.InputText(tooltip="Enter todo", key='todo-iText')
+input_box = Fsg.InputText(tooltip="Enter todo", key='todo_iText')
 add_button = Fsg.Button("Add")
 list_box = Fsg.Listbox(values=functions.get_todos(), key='todo_list',
                        enable_events=True, size=[45, 10])
@@ -17,17 +17,17 @@ while True:
     event, values = window.read()
     print(1, event)
     print(2, values)
-    print(3, values["todo_list"])
     match event:
         case "Add":
             todos = functions.get_todos()
-            latest_todo = values['todo-iText'] + "\n"
+            latest_todo = values['todo_iText'] + "\n"
             todos.append(latest_todo)
             functions.write_todos(todos)
+            window['todo_list'].update(values=todos)
         case "Edit":
             try:
                 selected_index_to_edit = window['todo_list'].Widget.curselection()
-                latest_todo = values['todo-iText'] + "\n"
+                latest_todo = values['todo_iText'] + "\n"
 
                 todos = functions.get_todos()
                 index = selected_index_to_edit[0]
@@ -37,6 +37,8 @@ while True:
                 window['todo_list'].update(values=todos)
             except IndexError:
                 Fsg.Popup("Select Item from list before you Edit.")
+        case "todo_list":
+                window["todo_iText"].update(value=values['todo_list'][0])
 
         case Fsg.WIN_CLOSED:
             break
