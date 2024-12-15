@@ -1,6 +1,10 @@
 import functions
 import FreeSimpleGUI as Fsg
+import time
 
+Fsg.theme("DarkBlue16")
+
+clock = Fsg.Text("", key='clock_key')
 label = Fsg.Text("Type in a to-do")
 input_box = Fsg.InputText(tooltip="Enter todo", key='todo_iText')
 add_button = Fsg.Button("Add")
@@ -12,16 +16,16 @@ exit_button = Fsg.Button("Exit")
 
 
 window = Fsg.Window('My To-Do App',
-                    layout=[[label],
+                    layout=[[clock],
+                            [label],
                             [input_box, add_button],
                             [list_box, edit_button, complete_button],
                             [exit_button]],
                     font=('Helvetica', 20))
 
 while True:
-    event, values = window.read()
-    print(1, event)
-    print(2, values)
+    event, values = window.read(timeout=200)
+    window["clock_key"].update(time.strftime("%b %d, %Y %H:%M:%S"))
     match event:
         case "Add":
             todos = functions.get_todos()
@@ -41,16 +45,19 @@ while True:
                 functions.write_todos(todos)
                 window['todo_list'].update(values=todos)
             except IndexError:
-                Fsg.Popup("Select Item from list before you Edit.")
+                Fsg.Popup("Select Item from list before you Edit.", font=("Helvetica", 20))
         case "todo_list":
                 window["todo_iText"].update(value=values['todo_list'][0])
         case "Complete":
-            todo_to_complete = values['todo_list'][0]
-            todos = functions.get_todos()
-            todos.remove(todo_to_complete)
-            functions.write_todos(todos)
-            window['todo_list'].update(values=todos)
-            window["todo_iText"].update(value="")
+            try:
+                todo_to_complete = values['todo_list'][0]
+                todos = functions.get_todos()
+                todos.remove(todo_to_complete)
+                functions.write_todos(todos)
+                window['todo_list'].update(values=todos)
+                window["todo_iText"].update(value="")
+            except IndexError:
+                Fsg.Popup("Select Item from list before you Complete.", font=("Helvetica", 20))
         case Fsg.WIN_CLOSED:
             break
         case "Exit":
